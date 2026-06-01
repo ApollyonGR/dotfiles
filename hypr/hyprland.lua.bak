@@ -1,0 +1,280 @@
+--------------------------------------------------------------------------------
+-- MONITORS
+--------------------------------------------------------------------------------
+
+-- See https://wiki.hyprland.org/Configuring/Monitors/
+hl.monitor({
+    "eDP-1, 1920x1200@60, 0x0, 1.25",
+})
+
+hl.config({
+    xwayland = {
+        enabled = true,
+        force_zero_scaling = true,
+    },
+    env = {
+        -- "GDK_SCALE,2",
+        "GDK_BACKEND,wayland,x11",
+        "XCURSOR_SIZE,24",
+        "HYPRCURSOR_SIZE,24",
+    },
+})
+
+--------------------------------------------------------------------------------
+-- MY PROGRAMS
+--------------------------------------------------------------------------------
+
+local terminal = "kitty"
+local fileManager = "dolphin"
+local menu = "rofi -show drun -config ~/.config/rofi/config.rasi"
+
+--------------------------------------------------------------------------------
+-- AUTOSTART
+--------------------------------------------------------------------------------
+
+hl.on("hyprland.start", function()
+    hl.exec_cmd("nm-applet & blueman-applet")
+    hl.exec_cmd("waybar")
+    hl.exec_cmd("swaync")
+    hl.exec_cmd("wl-gammarelay")
+    hl.exec_cmd("hyprpaper & hypridle")
+    -- hl.exec_cmd("kitty --class cmatrix-lock -o window_padding_width=0 --override background=black cmatrix")
+end)
+
+--------------------------------------------------------------------------------
+-- LOOK AND FEEL
+--------------------------------------------------------------------------------
+
+hl.config({
+    general = {
+        gaps_in = 5,
+        gaps_out = 10,
+        border_size = 3,
+        ["col.active_border"] = "rgba(FF73D0ee) rgba(90DDE9ee) 90deg",
+        ["col.inactive_border"] = "rgba(FFFFFFaa)",
+        -- Enable resizing windows by clicking and dragging on borders and gaps
+        resize_on_border = true,
+        allow_tearing = false,
+        layout = "dwindle",
+    },
+    decoration = {
+        rounding = 5,
+        active_opacity = 1.0,
+        inactive_opacity = 0.9,
+        shadow = {
+            enabled = true,
+            range = 4,
+            render_power = 3,
+            color = "rgba(1a1a1aee)",
+        },
+        blur = {
+            enabled = true,
+            size = 4,
+            passes = 1,
+            vibrancy = 0.1696,
+        },
+    },
+    animations = {
+        enabled = true,
+        bezier = {
+            "easeOutQuint,0.23,1,0.32,1",
+            "easeInOutCubic,0.65,0.05,0.36,1",
+            "linear,0,0,1,1",
+            "almostLinear,0.5,0.5,0.75,1.0",
+            "quick,0.15,0,0.1,1",
+            "overshot, 0.05, 0.9, 0.1, 1.1",
+            "smoothIn, 0.25, 1, 0.5, 1",
+            "smoothOut, 0.36, 0, 0.66, -0.56",
+        },
+        animation = {
+            "global, 1, 10, default",
+            "border, 1, 5.39, easeOutQuint",
+            "windows, 1, 3, overshot, slide",
+            -- "windows, 1, 4.79, easeOutQuint",
+            "windowsIn, 1, 4.1, easeOutQuint, popin 87%",
+            "windowsOut, 1, 3, smoothOut, slide",
+            -- "windowsOut, 1, 1.49, linear, popin 87%",
+            "fadeIn, 1, 1.73, almostLinear",
+            "fadeOut, 1, 1.46, almostLinear",
+            "fade, 1, 3, smoothIn",
+            "layers, 1, 3.81, easeOutQuint",
+            "layersIn, 1, 4, easeOutQuint, fade",
+            "layersOut, 1, 1.5, linear, fade",
+            "fadeLayersIn, 1, 1.79, almostLinear",
+            "fadeLayersOut, 1, 1.39, almostLinear",
+            "workspaces, 1, 1.94, almostLinear, fade",
+            "workspacesIn, 1, 1.21, almostLinear, fade",
+            "workspacesOut, 1, 1.94, almostLinear, fade",
+        },
+    },
+    -- dwindle = {
+    --     pseudotile = true, -- Master switch for pseudotiling.
+    --     preserve_split = true, -- You probably want this
+    -- },
+    master = {
+        new_status = "master",
+    },
+    misc = {
+        force_default_wallpaper = -1,
+        disable_hyprland_logo = false,
+        -- session_lock_xray = false
+        -- uncomment to make hyprlock background transparent 
+    },
+});
+
+--------------------------------------------------------------------------------
+-- INPUT
+--------------------------------------------------------------------------------
+
+hl.config({
+    input = {
+        kb_layout = "us",
+        kb_variant = "",
+        kb_model = "",
+        kb_options = "",
+        kb_rules = "",
+        follow_mouse = 1,
+        sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
+        touchpad = {
+            natural_scroll = false,
+        },
+    },
+})
+
+hl.device("epic-mouse-v1", {
+    sensitivity = -0.5,
+})
+
+--------------------------------------------------------------------------------
+-- KEYBINDINGS
+--------------------------------------------------------------------------------
+
+local mainMod = "SUPER" -- Sets "Windows" key as main modifier
+
+hl.bind(mainMod .. ", return, exec, " .. terminal)
+hl.bind(mainMod .. ", Q, killactive")
+hl.bind(mainMod .. ", M, exit")
+hl.bind(mainMod .. ", E, exec, " .. fileManager)
+hl.bind(mainMod .. ", V, togglefloating")
+hl.bind(mainMod .. ", D, exec, " .. menu)
+-- hl.bind(mainMod .. ", P, pseudo") -- dwindle
+-- hl.bind(mainMod .. ", J, togglesplit") -- dwindle
+hl.bind(mainMod .. ", W, exec, rfkill unblock wifi")
+
+-- Move focus with mainMod + arrow keys
+hl.bind(mainMod .. ", left, movefocus, l")
+hl.bind(mainMod .. ", right, movefocus, r")
+hl.bind(mainMod .. ", up, movefocus, u")
+hl.bind(mainMod .. ", down, movefocus, d")
+
+-- Controls wl-gammarelay for redlight filter
+hl.bind(mainMod .. ", U, exec, busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n -500")
+hl.bind(mainMod .. ", I, exec, busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n +500")
+
+-- Control hyprshot for screenshots 
+hl.bind(mainMod .. ", P, exec, ~/Documents/scripts/screenshot.sh")
+-- hl.bind(mainMod .. ", L, exec, /bin/cmatrix-lock.sh")
+hl.bind(mainMod .. ", L, exec, hyprlock")
+
+-- Launch Obsidian, the note-taking app
+hl.bind(mainMod .. ", O, exec, obsidian")
+
+-- Fullscreen
+hl.bind(mainMod .. ", F, fullscreen")
+
+-- Switch workspaces with mainMod + [0-9]
+hl.bind(mainMod .. ", 1, workspace, 1")
+hl.bind(mainMod .. ", 2, workspace, 2")
+hl.bind(mainMod .. ", 3, workspace, 3")
+hl.bind(mainMod .. ", 4, workspace, 4")
+hl.bind(mainMod .. ", 5, workspace, 5")
+hl.bind(mainMod .. ", 6, workspace, 6")
+hl.bind(mainMod .. ", 7, workspace, 7")
+hl.bind(mainMod .. ", 8, workspace, 8")
+hl.bind(mainMod .. ", 9, workspace, 9")
+hl.bind(mainMod .. ", 0, workspace, 10")
+
+-- Move active window to a workspace with mainMod + SHIFT + [0-9]
+hl.bind(mainMod .. " SHIFT, 1, movetoworkspace, 1")
+hl.bind(mainMod .. " SHIFT, 2, movetoworkspace, 2")
+hl.bind(mainMod .. " SHIFT, 3, movetoworkspace, 3")
+hl.bind(mainMod .. " SHIFT, 4, movetoworkspace, 4")
+hl.bind(mainMod .. " SHIFT, 5, movetoworkspace, 5")
+hl.bind(mainMod .. " SHIFT, 6, movetoworkspace, 6")
+hl.bind(mainMod .. " SHIFT, 7, movetoworkspace, 7")
+hl.bind(mainMod .. " SHIFT, 8, movetoworkspace, 8")
+hl.bind(mainMod .. " SHIFT, 9, movetoworkspace, 9")
+hl.bind(mainMod .. " SHIFT, 0, movetoworkspace, 10")
+
+-- Move active window to a special workspace with mainMod + SHIFT + [key]
+hl.bind(mainMod .. " SHIFT, V, movetoworkspace, special:vm")
+hl.bind(mainMod .. " SHIFT, O, movetoworkspace, special:obsidian")
+
+-- Switch through existing workspaces one at a time
+hl.bind(mainMod .. ", code:60, workspace, +1") -- code:60 is a period
+hl.bind(mainMod .. ", code:59, workspace, -1") -- code:59 is a comma
+
+-- Move acting window across workspaces
+hl.bind(mainMod .. " SHIFT, code:60, movetoworkspace, +1") 
+hl.bind(mainMod .. " SHIFT, code:59, movetoworkspace, -1") 
+
+-- Shift active window across the screen
+hl.bind(mainMod .. " SHIFT, right, movewindow, r")
+hl.bind(mainMod .. " SHIFT, left, movewindow, l")
+hl.bind(mainMod .. " SHIFT, up, movewindow, u")
+hl.bind(mainMod .. " SHIFT, down, movewindow, d")
+
+-- Special workspaces for Spotify, Discord, etc.
+hl.bind("ALT, S, togglespecialworkspace, spotify")
+hl.bind("ALT, D, togglespecialworkspace, discord")
+hl.bind("ALT, W, togglespecialworkspace, wireshark")
+hl.bind("ALT, A, togglespecialworkspace, arduino")
+hl.bind("ALT, G, togglespecialworkspace, gns3")
+hl.bind("ALT, V, togglespecialworkspace, vm")
+hl.bind("ALT, O, togglespecialworkspace, obsidian")
+
+-- Scroll through existing workspaces with mainMod + scroll
+hl.bind(mainMod .. ", mouse_down, workspace, e+1")
+hl.bind(mainMod .. ", mouse_up, workspace, e-1")
+
+-- Move/resize windows with mainMod + LMB/RMB and dragging
+hl.bindm(mainMod .. ", mouse:272, movewindow")
+hl.bindm(mainMod .. ", mouse:273, resizewindow")
+
+-- Laptop multimedia keys for volume and LCD brightness
+hl.bindel(", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+")
+hl.bindel(", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-")
+hl.bindel(", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")
+hl.bindel(", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle")
+hl.bindel(", XF86MonBrightnessUp, exec, brightnessctl s 10%+")
+hl.bindel(", XF86MonBrightnessDown, exec, brightnessctl s 10%-")
+
+-- Requires playerctl
+hl.bindl(", XF86AudioNext, exec, playerctl next")
+hl.bindl(", XF86AudioPause, exec, playerctl play-pause")
+hl.bindl(", XF86AudioPlay, exec, playerctl play-pause")
+hl.bindl(", XF86AudioPrev, exec, playerctl previous")
+
+--------------------------------------------------------------------------------
+-- WINDOWS AND WORKSPACES
+--------------------------------------------------------------------------------
+
+hl.windowrule({
+    "match:class spotify, workspace special:spotify",
+    "match:class de.shorsh.discord.screenaudio, workspace special:discord",
+    "match:class org.wireshark.Wireshark, workspace special:wireshark",
+    "match:class Arduino IDE, workspace special:arduino",
+    "match:class gns3, workspace special:gns3",
+    "match:class virt-manager, workspace special:vm",
+    "match:class obsidian, workspace special:obsidian",
+    -- "match:class cmatrix-lock, fullscreen_state 3", 
+    -- "match:class cmatrix-lock, border_size 0",
+    -- "match:class cmatrix-lock, workspace special:cmatrix silent",
+    -- "match:class cmatrix-lock, no_anim on",
+    "match:class xdg-desktop-portal-gtk, float on",
+})
+
+hl.layerrule({
+    "no_anim on, match:class hyprpicker",
+    "no_anim on, match:class selection",
+})
