@@ -1,0 +1,92 @@
+/* Default Settings for Every Window */ 
+* {
+  background-color: transparent;
+  text-color: white;
+}
+
+/*######### 
+Main Window 
+#########*/
+
+window {
+  padding: 0.5em;
+  border-color: pink;
+  border:        5px;
+  border-radius: 10px;
+  width: 	 512px;
+  height:        530px;
+  background-color: pink/50%;
+  //background-image: url("kitty.jpeg", both);
+}
+
+/*###########################################
+Structural Layout for "mainbox" and "element" 
+###########################################*/
+
+element {
+  background: transparent;
+  children: [ element-icon, element-text ];
+}
+
+/*##################
+Search Bar & Buttons 
+##################*/
+
+inputbar {
+  margin: 0px 0px 0.5em 0em;
+  spacing: 0.4em;
+  children: [ button-iggy1, entry,overlay,case-indicator, button-iggy2];
+}
+button-iggy1, button-iggy2 {
+  expand: false;
+  content: "🐱";
+  action: "kb-primary-paste";
+  horizontal-align: 0.5;
+}
+button-iggy2 {
+  action: "kb-screenshot";
+}
+
+/*########## 
+Results Grid 
+##########*/
+
+listview, inputbar, message {
+  padding:          0.5 em;  
+  border-color:     lightpink;
+  border:           5px;
+  border-radius:    5px;
+  background-color: black/70%;
+
+  columns:          4;
+  lines:            4;
+}
+listview {
+  border:           5px 5px 5px 5px;
+  border-radius:    5px 5px 5px 5px;
+}
+
+/*################################
+Fine-Tuning Result Items (element)
+################################*/
+
+element {
+    border:         0;
+    padding:        7px;
+    font:           "Mono 8";
+    orientation:    vertical;
+}
+element-icon {
+  size:             3em;
+}
+element selected {
+  border-color:     lightpink;
+  border:           4px;
+  border-radius:    5px;
+  background-color: lightpink/20%;
+}
+element-text, element-icon {
+  font:             inherit; 
+  horizontal-align: 0.5;
+}
+
