@@ -44,8 +44,10 @@
             "special:obsidian": "",
             "special:discord": "",
             "special:spotify": "",
-            "special:vm": "",    
-            "urgent": "",
+            "special:vm": "",
+            "special:rustdesk": "󰢹", 
+            "special:wireshark": "",
+            //"urgent": "",
             //"active": "",
             "default": ""
         }
